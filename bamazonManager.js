@@ -1,5 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require('inquirer');
+var chalk = require("chalk");
 var itemsArray = [];
 var connection = mysql.createConnection({
     host: "localhost",
@@ -28,7 +29,7 @@ function menu() {
         {
             type: "list",
             name: "userChoice",
-            message: "What would you like to do?",
+            message: chalk.yellow("Welcome Manager, What would you like to do?"),
             choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product", "Exit"]
         }
     ]).then(function (body) {
@@ -68,11 +69,11 @@ function viewProducts() {
     connection.query("SELECT * FROM products",
         function (err, res) {
             if (err) throw err;
-            console.log("---- All Products------");
+            console.log(chalk.blue("---- All Products------"));
             for (let i = 0; i < res.length; i++) {
                 console.log(res[i].id + " " + res[i].product_name + " $" + res[i].price + " quantity: " + res[i].stock_quantity);
             }
-            console.log("---- All Products------");
+            console.log(chalk.blue("---- All Products------"));
             menu();
             
         })
@@ -81,11 +82,11 @@ function viewProducts() {
 function viewLow() {
     connection.query("SELECT * FROM products WHERE stock_quantity < 10",
         function (err, res) {
-            console.log("---- Low Inventory Products------");
+            console.log(chalk.red("---- Low Inventory Products------"));
             for (let i = 0; i < res.length; i++) {
                 console.log(res[i].id + " " + res[i].product_name + " $" + res[i].price + " quantity: " + res[i].stock_quantity);
             }
-            console.log("---- Low Inventory Products------");
+            console.log(chalk.red("---- Low Inventory Products------"));
             menu();
         })
 }
@@ -125,7 +126,7 @@ function addInventory() {
                     id: inventId
                 }
             ], function (err, res) {
-                console.log("Your inventory has been updated!");
+                console.log(chalk.green("Your inventory has been updated!"));
                 menu();
             });
 
@@ -168,7 +169,7 @@ function addProduct() {
             }
         ], function (err, res) {
             if (err) throw err;
-            console.log("Your new item has been added!");
+            console.log(chalk.green("Your new item has been added!"));
             menu();
         })
     })

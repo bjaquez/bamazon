@@ -1,8 +1,8 @@
 var mysql = require("mysql");
 var inquirer = require('inquirer');
+var chalk = require("chalk");
 var itemsArray = [];
 var userChoiceId;
-var department;
 var connection = mysql.createConnection({
     host: "localhost",
 
@@ -19,7 +19,7 @@ var connection = mysql.createConnection({
 
 connection.connect(function (err) {
     if (err) throw err;
-    console.log("connected as id " + connection.threadId);
+    //console.log("connected as id " + connection.threadId);
     menu();
 });
 
@@ -29,7 +29,7 @@ function menu() {
         {
             type: "list",
             name: "userChoice",
-            message: "Welcome, how would you like to shop?",
+            message: chalk.magenta("Welcome to Bamazon, how would you like to shop?"),
             choices: ["See All Items", "Shop By Department", "Exit"]
         }
     ]).then(function (body) {
@@ -159,14 +159,14 @@ function shop(res) {
             })
             var total = (body.userQuantity * parseInt(userChoicePrice))
             console.log("~~~~~~~~~~~~~~~~~~~~~");
-            console.log("Thanks for shopping at Bamazon!");
-            console.log("Here is your " + userChoicename + "!");
-            console.log("Your total is " + "$" + total);
+            console.log(chalk.green("Thanks for shopping at Bamazon!"));
+            console.log(chalk.green("Here is your ") + chalk.yellow(userChoicename + "!"));
+            console.log(chalk.green("Your total is ") + chalk.yellow( "$" + total));
             console.log("~~~~~~~~~~~~~~~~~~~~~");
         }
         else {
             console.log("~~~~~~~~~~~~~~~~~~~~~");
-            console.log("Sorry not enough inventory");
+            console.log(chalk.red("Sorry not enough inventory"));
             console.log("~~~~~~~~~~~~~~~~~~~~~");
             menu();
         }
